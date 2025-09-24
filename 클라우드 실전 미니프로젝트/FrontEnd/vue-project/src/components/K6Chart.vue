@@ -118,6 +118,8 @@ export default defineComponent({
         },
         y: {
           beginAtZero: true,
+          min: 0,
+          max: 300,
         },
       },
     }
@@ -165,7 +167,7 @@ export default defineComponent({
         y: {
           beginAtZero: true,
           suggestedMin: 0, // 최소값은 0부터
-          suggestedMax: 10, // 최소 10초 보장
+          suggestedMax: 50, // 최소 10초 보장
         },
       },
     }
@@ -291,7 +293,7 @@ export default defineComponent({
       const resp = item.avgResponseTime
 
       if (errorRate >= 5) return '❌' // 빨강
-      if (resp >= 5) return '⚠️' // 노랑
+      if (errorRate >= 2) return '⚠️' // 노랑
       return '✅' // 초록
     }
 
@@ -427,7 +429,7 @@ export default defineComponent({
   position: fixed;
   top: 120px;
   right: 20px;
-  width: 320px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   gap: 20px;
