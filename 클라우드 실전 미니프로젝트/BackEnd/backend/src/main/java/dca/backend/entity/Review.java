@@ -15,8 +15,8 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_seq")
-    private Long reviewSeq;   // bigint → Long
+    @Column(name = "review_seq", columnDefinition = "INT")
+    private Integer reviewSeq;
 
     @Column(columnDefinition = "LONGTEXT")
     private String content;   // longtext
@@ -25,10 +25,10 @@ public class Review {
     private LocalDateTime createdAt; // datetime
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive; // bit(1) → Boolean 매핑
+    private int isActive;
 
     @Column(name = "is_spoiler")
-    private Boolean isSpoiler; // tinyint(1) → Boolean 매핑
+    private int isSpoiler; // tinyint(1) → Boolean 매핑
 
     @Column
     private Integer likes; // int

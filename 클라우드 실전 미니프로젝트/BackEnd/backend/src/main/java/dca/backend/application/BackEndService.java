@@ -80,8 +80,8 @@ public class BackEndService {
                 Review review = Review.builder()
                         .content("부하테스트 리뷰 " + UUID.randomUUID()) // 내용 랜덤
                         .createdAt(LocalDateTime.now())
-                        .isActive(true)
-                        .isSpoiler(false)
+                        .isActive(1)
+                        .isSpoiler(0)
                         .likes(random.nextInt(100))
                         .movieSeq(reviews.get(0).getMovieSeq()) // 임시 영화 번호, 실제 테스트할 때 원하는 값 넣기
                         .reviewRating(ThreadLocalRandom.current().nextDouble(1.0, 5.0))
@@ -100,10 +100,15 @@ public class BackEndService {
     @Transactional
     public void runK6(String category) {
         try {
+//            ProcessBuilder pb = new ProcessBuilder(
+//                    "k6", "run",
+//                    "--env", "CATEGORY=" + category,
+//                    "src/main/resources/load-test/test.js"
+//            );
             ProcessBuilder pb = new ProcessBuilder(
                     "k6", "run",
                     "--env", "CATEGORY=" + category,
-                    "src/main/resources/load-test/test.js"
+                    "/app/load-test/test.js"   // 절대 경로
             );
             pb.redirectErrorStream(true);
             Process process = pb.start();
@@ -126,7 +131,7 @@ public class BackEndService {
                 // http_req_failed................: 0.00%  0 out of 30
                 if (line.contains("http_req_failed")) {
                     String percent = line.split(":")[1].trim().split("%")[0].trim();
-                    errorRate += Double.parseDouble(percent) / 100.0;
+                    errorRate = Double.parseDouble(percent) / 100.0;
                 }
 
                 // http_req_duration..............: avg=12.92s ...
