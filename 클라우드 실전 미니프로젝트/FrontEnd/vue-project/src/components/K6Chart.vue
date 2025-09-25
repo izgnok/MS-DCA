@@ -119,7 +119,7 @@ export default defineComponent({
         y: {
           beginAtZero: true,
           min: 0,
-          max: 300,
+          max: 200,
         },
       },
     }
@@ -409,8 +409,8 @@ export default defineComponent({
 }
 
 .chart-container {
-  width: 1000px;
-  height: 500px;
+  width: 900px;
+  height: 563px;
   margin: 40px auto;
   padding: 20px;
   background: #fafafa;

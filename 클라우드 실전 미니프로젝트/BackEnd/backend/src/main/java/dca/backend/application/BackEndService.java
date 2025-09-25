@@ -100,16 +100,16 @@ public class BackEndService {
     @Transactional
     public void runK6(String category) {
         try {
-//            ProcessBuilder pb = new ProcessBuilder(
-//                    "k6", "run",
-//                    "--env", "CATEGORY=" + category,
-//                    "src/main/resources/load-test/test.js"
-//            );
             ProcessBuilder pb = new ProcessBuilder(
                     "k6", "run",
                     "--env", "CATEGORY=" + category,
-                    "/app/load-test/test.js"   // 절대 경로
+                    "src/main/resources/load-test/test.js"
             );
+//            ProcessBuilder pb = new ProcessBuilder(
+//                    "k6", "run",
+//                    "--env", "CATEGORY=" + category,
+//                    "/app/load-test/test.js"   // 절대 경로
+//            );
             pb.redirectErrorStream(true);
             Process process = pb.start();
 

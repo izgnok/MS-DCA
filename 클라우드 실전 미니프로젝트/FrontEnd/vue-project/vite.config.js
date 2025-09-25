@@ -12,17 +12,17 @@ export default defineConfig({
     },
   },
   server: {
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:80', // Spring Boot 백엔드 주소
-    //     changeOrigin: true,
-    //   },
-    // },
     proxy: {
       '/api': {
-        target: 'http://172.20.10.2:8080',
+        target: 'http://localhost:80', // Spring Boot 백엔드 주소
         changeOrigin: true,
       },
     },
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://172.20.10.2:8080',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
 })
