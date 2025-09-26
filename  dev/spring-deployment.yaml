@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dca-backend
+  labels:
+    app: dca-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dca-backend
+  template:
+    metadata:
+      labels:
+        app: dca-backend
+    spec:
+      serviceAccountName: backend-sa
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: dca-backend
+          image: zlxldgus123/spring-app:latest
+          ports:
+            - containerPort: 8080

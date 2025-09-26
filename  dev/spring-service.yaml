@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dca-backend
+spec:
+  selector:
+    app: dca-backend
+  ports:
+    - protocol: TCP
+      port: 8080 # ClusterIP 서비스 포트
+      targetPort: 8080 # 컨테이너 포트랑 동일하게
