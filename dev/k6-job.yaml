@@ -4,11 +4,8 @@ metadata:
   name: k6-load-test
   namespace: default
 spec:
-  backoffLimit: 0
-  ttlSecondsAfterFinished: 300
   template:
     spec:
-      restartPolicy: Never
       containers:
         - name: k6
           image: grafana/k6:latest
@@ -16,7 +13,9 @@ spec:
           volumeMounts:
             - name: k6-scripts
               mountPath: /scripts
+      restartPolicy: Never
       volumes:
         - name: k6-scripts
           configMap:
             name: k6-test-scripts
+  backoffLimit: 0
