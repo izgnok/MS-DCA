@@ -25,15 +25,31 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    // ✅ Spring Boot 기본
+    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // ✅ DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // ✅ Lombok
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // ✅ 개발 편의
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // ✅ 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'io.kubernetes:client-java:18.0.0'
+    implementation 'io.kubernetes:client-java-api:18.0.0'
+
+    // ✅ YAML 파싱 (Job manifest 불러올 경우 필요)
+    implementation 'org.yaml:snakeyaml:2.0'
 }
 
 tasks.named('test') {
