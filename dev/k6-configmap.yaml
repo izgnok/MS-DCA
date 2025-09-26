@@ -2,8 +2,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: k6-scripts
+  namespace: dev
 data:
-  test.js: |
+  script.js: |
     import http from 'k6/http';
     import { sleep } from 'k6';
 
@@ -13,8 +14,8 @@ data:
                 executor: 'ramping-vus',
                 startVUs: 0,
                 stages: [
-                    { duration: '30s', target: 5 },
-                    { duration: '1m', target: 10 },
+                    { duration: '30s', target: 1 },
+                    { duration: '1m', target: 5 },
                     { duration: '30s', target: 0 },
                 ],
             },
@@ -22,6 +23,10 @@ data:
     };
 
     export default function () {
-        http.get('http://dca-backend.default.svc.cluster.local:8080/backend/api/play');
+        let res = http.post(
+            'http://dca-backend.default.svc.cluster.local:8080/backend/api/play',
+            null,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
         sleep(1);
     }
