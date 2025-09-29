@@ -6,7 +6,7 @@ metadata:
   labels:
     app: dca-backend
 spec:
-  replicas: 4   # ✅ 기본 파드 수 4로 늘림
+  replicas: 1   # ✅ 기본 파드 수 4로 늘림
   revisionHistoryLimit: 2
   selector:
     matchLabels:
