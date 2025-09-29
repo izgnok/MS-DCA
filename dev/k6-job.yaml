@@ -12,8 +12,19 @@ spec:
       containers:
         - name: k6
           image: grafana/k6:latest
-          command: ["k6","run","--out","experimental-prometheus-rw","/scripts/script.js"]
+          command:
+            - sh
+            - -c
+            - |
+              k6 run \
+                --out experimental-prometheus-rw \
+                --tag testid=${JOB_NAME} \
+                /scripts/script.js
           env:
+            - name: JOB_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name   # 잡 이름을 testid로 사용
             - name: K6_PROMETHEUS_RW_SERVER_URL
               value: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
             # Native histogram 끄고 Counter/Gauge만 보냄

@@ -2,12 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: dca-backend
-  namespace: default
+  namespace: backend
   labels:
     app: dca-backend
 spec:
-  replicas: 1   # ✅ 기본 파드 수 4로 늘림
-  revisionHistoryLimit: 2
+  replicas: 1   # ✅ 기본 파드 수 4
+# revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: dca-backend
@@ -26,10 +26,28 @@ spec:
           image: zlxldgus123/spring-app:latest
           ports:
             - containerPort: 8080
-          resources:                  # ✅ HPA가 동작하려면 리소스 요청/제한이 필요
+          resources:                  # ✅ HPA 동작을 위한 리소스 설정
             requests:
               cpu: "200m"
               memory: "512Mi"
             limits:
               cpu: "500m"
               memory: "1Gi"
+          readinessProbe:             # ✅ Readiness Probe 추가
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 10   # 컨테이너 기동 후 대기 시간
+            periodSeconds: 10         # 주기적으로 체크
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          livenessProbe:              # ✅ Liveness Probe 추가
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
