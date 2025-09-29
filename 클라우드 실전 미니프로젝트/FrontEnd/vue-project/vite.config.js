@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), vueDevTools()],
   resolve: {
@@ -13,16 +13,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:80', // Spring Boot 백엔드 주소
+      '/backend/api': {
+        target: 'http://localhost:80', // Spring Boot
         changeOrigin: true,
       },
     },
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://172.20.10.2:8080',
-    //     changeOrigin: true,
-    //   },
-    // },
   },
 })

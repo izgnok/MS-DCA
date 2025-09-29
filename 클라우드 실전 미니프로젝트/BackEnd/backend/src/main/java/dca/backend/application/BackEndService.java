@@ -2,335 +2,256 @@ package dca.backend.application;
 
 import dca.backend.common.module.exception.RestApiException;
 import dca.backend.common.module.status.StatusCode;
-import dca.backend.dto.K6ResultResponse;
-import dca.backend.entity.K6Result;
-import dca.backend.entity.Review;
-import dca.backend.entity.User;
-import dca.backend.infrastructure.BackEndRepository;
-import dca.backend.infrastructure.ReviewRepository;
-import dca.backend.infrastructure.UserRepository;
+
+
+import dca.backend.dto.*;
+
+import dca.backend.moviedb.entity.Movie;
+import dca.backend.moviedb.repository.MovieRepository;
+import dca.backend.userdb.entity.Review;
+import dca.backend.userdb.entity.User;
+import dca.backend.userdb.repository.ReviewRepository;
+import dca.backend.userdb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.openapi.ApiException;
-import io.kubernetes.client.openapi.Configuration;
-import io.kubernetes.client.openapi.apis.BatchV1Api;
-import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.*;
-import io.kubernetes.client.util.Config;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BackEndService {
 
-    private final BackEndRepository backEndRepository;
+    //    private final BackEndRepository backEndRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final MovieRepository movieRepository;
 
-    private static final String NAMESPACE = "default";
-    private static final String K6_IMAGE = "grafana/k6:latest";
-    private static final String K6_SCRIPT_CM = "k6-test-scripts";
-    private static final String K6_SCRIPT_PATH = "/scripts/test.js";
-    private static final long   JOB_TIMEOUT_SEC = 180;
-    private static final long   POD_LOG_WAIT_SEC = 15;
-    private static final boolean CLEANUP_JOB_AFTER_DONE = true;
+    // 테스트용 더미데이터 삽입
+//    @Transactional
+//    public void insertDummyData() {
+//        for (int i = 5; i >= 1; i--) {
+//            // 공통 실행 시각 (현재시간 - i분)
+//            String executedAt = LocalDateTime.now().minusMinutes(i).toString();
+//
+//            // 도커 (성능 낮음)
+//            K6Result docker = K6Result.builder()
+//                    .id(UUID.randomUUID().toString())
+//                    .category("docker")
+//                    .requestCount(50 + i * 5)          // 요청 수 낮음
+//                    .avgResponseTime(2.0 + i * 0.5)   // 응답 시간 길음 (초 단위)
+//                    .errorRate(0.1 + (i * 0.02))      // 에러율 더 높음
+//                    .executedAt(executedAt)
+//                    .build();
+//            backEndRepository.save(docker);
+//
+//            // 쿠버네티스 (성능 더 좋음)
+//            K6Result kube = K6Result.builder()
+//                    .id(UUID.randomUUID().toString())
+//                    .category("kubernetes")
+//                    .requestCount(80 + i * 10)         // 요청 수 더 많음
+//                    .avgResponseTime(0.8 + i * 0.2)   // 응답 시간 더 짧음
+//                    .errorRate(0.02 + (i * 0.01))     // 에러율 더 낮음
+//                    .executedAt(executedAt)
+//                    .build();
+//            backEndRepository.save(kube);
+//        }
+//    }
 
-    private static final Pattern RX_CHECKS =
-            Pattern.compile("checks_succeeded.*?:\\s*([0-9.]+)%\\s*(\\d+)\\s*(?:out of|/)?\\s*(\\d+)", Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern RX_HTTP_FAILED =
-            Pattern.compile("http_req_failed.*?:\\s*([0-9.]+)%", Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern RX_HTTP_DURATION_AVG =
-            Pattern.compile("http_req_duration.*?avg=\\s*([0-9.]+)\\s*(ms|s)", Pattern.CASE_INSENSITIVE);
-
+    // 테스트용API
     @Transactional
     public void play() {
         Random random = new Random();
-        log.info("▶ play() 시작");
 
+        // 리뷰 많이 쓴 유저 10명 찾기
         List<Integer> topUsers = reviewRepository.findTop10UsersByReviewCount();
-        log.info("▶ 상위 유저 seq: {}", topUsers);
 
         try {
             for (int userSeq : topUsers) {
+                // 각 유저별 리뷰 가져오기
                 User user = userRepository.findById(userSeq).orElseThrow();
                 List<Review> reviews = user.getReviews();
-                log.info(" - User {} 리뷰 수: {}", userSeq, reviews.size());
-                if (reviews.isEmpty()) {
-                    log.warn(" - User {} 리뷰 없음 → skip", userSeq);
-                    continue;
-                }
+                System.out.println("User " + userSeq + " 리뷰 개수 = " + reviews.size());
 
+                // 리뷰 삽입
                 Review review = Review.builder()
-                        .content("부하테스트 리뷰 " + UUID.randomUUID())
+                        .content("부하테스트 리뷰 " + UUID.randomUUID()) // 내용 랜덤
                         .createdAt(LocalDateTime.now())
-                        .isActive(true)      // ✅ Boolean 수정
-                        .isSpoiler(false)    // ✅ Boolean 수정
+                        .isActive(1)
+                        .isSpoiler(0)
                         .likes(random.nextInt(100))
-                        .movieSeq(reviews.get(0).getMovieSeq())
+                        .movieSeq(reviews.get(0).getMovieSeq()) // 임시 영화 번호, 실제 테스트할 때 원하는 값 넣기
                         .reviewRating(ThreadLocalRandom.current().nextDouble(1.0, 5.0))
                         .sentimentScore(ThreadLocalRandom.current().nextDouble(-1.0, 1.0))
-                        .user(user)
+                        .user(user) // FK 필수
                         .build();
-
                 reviewRepository.save(review);
-                log.debug(" - User {} 리뷰 저장 OK", userSeq);
             }
-            log.info("▶ play() 완료");
         } catch (Exception e) {
-            log.error("❌ play() 실패", e);
+            e.printStackTrace();
             throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
-    @Transactional
-    public void runK6(String category) {
-        String jobName = "k6-load-test-" + UUID.randomUUID().toString().substring(0, 8);
-        log.info("▶ runK6 시작: category={}, jobName={}", category, jobName);
+//    // K6 테스트 및 결과 저장
+//    @Transactional
+//    public void runK6(String category) {
+//        try {
+//            ProcessBuilder pb = new ProcessBuilder(
+//                    "k6", "run",
+//                    "--env", "CATEGORY=" + category,
+//                    "src/main/resources/load-test/test.js"
+//            );
+////            ProcessBuilder pb = new ProcessBuilder(
+////                    "k6", "run",
+////                    "--env", "CATEGORY=" + category,
+////                    "/app/load-test/test.js"   // 절대 경로
+////            );
+//            pb.redirectErrorStream(true);
+//            Process process = pb.start();
+//
+//            long successCount = 0;
+//            double avgResponseTimeSec = 0;
+//            double errorRate = 0;
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                System.out.println("K6-OUTPUT >> " + line);
+//
+//                // checks_succeeded...: 100.00% 30 out of 30
+//                if (line.contains("checks_succeeded")) {
+//                    String[] parts = line.trim().split("\\s+");
+//                    successCount = Long.parseLong(parts[2]); // "30"
+//                }
+//
+//                // http_req_failed................: 0.00%  0 out of 30
+//                if (line.contains("http_req_failed")) {
+//                    String percent = line.split(":")[1].trim().split("%")[0].trim();
+//                    errorRate = Double.parseDouble(percent) / 100.0;
+//                }
+//
+//                // http_req_duration..............: avg=12.92s ...
+//                if (line.contains("http_req_duration") && line.contains("avg=")) {
+//                    int idx = line.indexOf("avg=");
+//                    if (idx != -1) {
+//                        String raw = line.substring(idx + 4).split(" ")[0].trim();
+//                        // "12.92s" 또는 "111.76ms" 같은 값
+//                        if (raw.endsWith("ms")) {
+//                            avgResponseTimeSec = Double.parseDouble(raw.replace("ms", "")) / 1000.0; // ms → 초
+//                        } else if (raw.endsWith("s")) {
+//                            avgResponseTimeSec = Double.parseDouble(raw.replace("s", "")); // 초 그대로
+//                        } else {
+//                            avgResponseTimeSec = Double.parseDouble(raw); // 단위 없는 경우
+//                        }
+//                    }
+//                }
+//            }
+//            process.waitFor();
+//
+//            // DB 저장
+//            K6Result result = K6Result.builder()
+//                    .category(category)
+//                    .requestCount(successCount)
+//                    .avgResponseTime(avgResponseTimeSec)
+//                    .errorRate(errorRate)
+//                    .executedAt(LocalDateTime.now().toString())
+//                    .build();
+//
+//            backEndRepository.save(result);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
+//        }
+//    }
 
-        ApiClient client = buildApiClient();
-        Configuration.setDefaultApiClient(client);
 
-        BatchV1Api batchApi = new BatchV1Api(client);
-        CoreV1Api  coreApi  = new CoreV1Api(client);
+    // 최근 결과 가져오기
+//    @Transactional(readOnly = true)
+//    public List<K6ResultResponse> getRecentResults() {
+//        List<K6Result> dockerResults = backEndRepository.findTop5ByCategoryOrderByExecutedAtDesc("docker");
+//        List<K6Result> kubeResults = backEndRepository.findTop5ByCategoryOrderByExecutedAtDesc("kubernetes");
+//
+//        return Stream.concat(dockerResults.stream(), kubeResults.stream())
+//                .map(result -> K6ResultResponse.builder()
+//                        .category(result.getCategory())
+//                        .requestCount(result.getRequestCount())
+//                        .avgResponseTime(result.getAvgResponseTime())
+//                        .errorRate(result.getErrorRate())
+//                        .executedAt(result.getExecutedAt())
+//                        .build()
+//                )
+//                .toList();
+//    }
 
-        try {
-            V1Job job = buildK6Job(jobName, category);
 
-            // ✅ 최신 시그니처 반영 (6개 인자 필요)
-            batchApi.createNamespacedJob(NAMESPACE, job, null, null, null, null);
-            log.info(" - Job 생성 완료: {}", jobName);
-
-            waitForJobCompletion(batchApi, jobName, Duration.ofSeconds(JOB_TIMEOUT_SEC));
-
-            String podName = waitAndGetFirstPodName(coreApi, jobName, Duration.ofSeconds(POD_LOG_WAIT_SEC));
-            String logs = readFullPodLogs(coreApi, podName);
-            log.debug("▼▼▼ K6 RAW LOGS ({} lines) ▼▼▼\n{}\n▲▲▲", logs.split("\n").length, logs);
-
-            K6Parsed parsed = parseK6Logs(logs);
-            K6Result result = K6Result.builder()
-                    .category(category)
-                    .requestCount(parsed.checksSucceeded)
-                    .avgResponseTime(parsed.avgDurationSec)
-                    .errorRate(parsed.errorRate)
-                    .executedAt(LocalDateTime.now().toString())
-                    .build();
-
-            backEndRepository.save(result);
-            log.info("▶ runK6 저장 완료: {}", result);
-
-        } catch (Exception e) {
-            log.error("❌ runK6 실패: {}", e.getMessage(), e);
-            throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, e.getMessage());
-        } finally {
-            if (CLEANUP_JOB_AFTER_DONE) {
-                try {
-                    deleteJobAndPods(batchApi, coreApi, jobName);
-                    log.info(" - Job/POD 정리 완료: {}", jobName);
-                } catch (Exception cleanEx) {
-                    log.warn(" - 정리 중 경고: {}", cleanEx.getMessage());
-                }
-            }
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public List<K6ResultResponse> getRecentResults() {
-        log.info("▶ 최근 결과 조회");
-
-        List<K6Result> dockerResults = backEndRepository.findTop5ByCategoryOrderByExecutedAtDesc("docker");
-        List<K6Result> kubeResults   = backEndRepository.findTop5ByCategoryOrderByExecutedAtDesc("kubernetes");
-        log.debug(" - docker={}, kube={}", dockerResults.size(), kubeResults.size());
-
-        return Stream.concat(dockerResults.stream(), kubeResults.stream())
-                .map(r -> K6ResultResponse.builder()
-                        .category(r.getCategory())
-                        .requestCount(r.getRequestCount())
-                        .avgResponseTime(r.getAvgResponseTime())
-                        .errorRate(r.getErrorRate())
-                        .executedAt(r.getExecutedAt())
-                        .build())
-                .toList();
-    }
-
-    private ApiClient buildApiClient() {
-        try {
-            try {
-                log.debug(" - ApiClient: in-cluster 로드 시도");
-                return Config.fromCluster();
-            } catch (Exception inClusterFail) {
-                log.debug(" - ApiClient: kubeconfig 로드 시도");
-                ApiClient client = Config.defaultClient();
-                client.setReadTimeout((int) Duration.ofSeconds(JOB_TIMEOUT_SEC + POD_LOG_WAIT_SEC + 30).toMillis());
-                return client;
-            }
-        } catch (Exception e) {
-            throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, "K8S ApiClient 생성 실패: " + e.getMessage());
-        }
-    }
-
-    private V1Job buildK6Job(String jobName, String category) {
-        V1PodSpec podSpec = new V1PodSpec()
-                .restartPolicy("Never")
-                .containers(List.of(
-                        new V1Container()
-                                .name("k6")
-                                .image(K6_IMAGE)
-                                .imagePullPolicy("IfNotPresent")
-                                .command(List.of("k6", "run", K6_SCRIPT_PATH))
-                                .env(List.of(
-                                        new V1EnvVar().name("CATEGORY").value(category)
-                                ))
-                                .volumeMounts(List.of(
-                                        new V1VolumeMount().name("k6-scripts").mountPath("/scripts")
-                                ))
-                ))
-                .volumes(List.of(
-                        new V1Volume()
-                                .name("k6-scripts")
-                                .configMap(new V1ConfigMapVolumeSource().name(K6_SCRIPT_CM))
-                ));
-
-        V1PodTemplateSpec template = new V1PodTemplateSpec()
-                .metadata(new V1ObjectMeta()
-                        .name(jobName + "-pod")
-                        .labels(Map.of("job-name", jobName, "app", "k6-load-test")))
-                .spec(podSpec);
-
-        V1JobSpec jobSpec = new V1JobSpec()
-                .template(template)
-                .backoffLimit(0)
-                .ttlSecondsAfterFinished(300);
-
-        return new V1Job()
-                .apiVersion("batch/v1")
-                .kind("Job")
-                .metadata(new V1ObjectMeta()
-                        .name(jobName)
-                        .namespace(NAMESPACE)
-                        .labels(Map.of("app", "k6-load-test")))
-                .spec(jobSpec);
-    }
-
-    private void waitForJobCompletion(BatchV1Api batchApi, String jobName, Duration timeout) throws Exception {
-        long deadline = System.currentTimeMillis() + timeout.toMillis();
-        log.info(" - Job 완료 대기 (timeout={}s)", timeout.getSeconds());
-
-        while (System.currentTimeMillis() < deadline) {
-            V1Job j = batchApi.readNamespacedJob(jobName, NAMESPACE, null); // ✅ 시그니처 최신화
-            V1JobStatus st = j.getStatus();
-            Integer succeeded = st.getSucceeded();
-            Integer failed    = st.getFailed();
-            Integer active    = st.getActive();
-
-            log.debug("   · Job 상태: active={}, succeeded={}, failed={}", n(active), n(succeeded), n(failed));
-
-            if (succeeded != null && succeeded > 0) return;
-            if (failed != null && failed > 0) {
-                throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, "k6 Job 실패 (failed=" + failed + ")");
-            }
-            Thread.sleep(1000);
-        }
-        throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, "k6 Job 타임아웃"); // ✅ REQUEST_TIMEOUT → INTERNAL_SERVER_ERROR
-    }
-
-    private String waitAndGetFirstPodName(CoreV1Api coreApi, String jobName, Duration timeout) throws Exception {
-        long deadline = System.currentTimeMillis() + timeout.toMillis();
-        while (System.currentTimeMillis() < deadline) {
-            V1PodList pods = coreApi.listNamespacedPod(
-                    NAMESPACE, null, null, null, null,
-                    "job-name=" + jobName, null, null, null, null, null
-            );
-
-            if (!pods.getItems().isEmpty()) {
-                String podName = pods.getItems().get(0).getMetadata().getName();
-                log.info(" - Job Pod 발견: {}", podName);
-                return podName;
-            }
-            Thread.sleep(1000);
-        }
-        throw new RestApiException(StatusCode.INTERNAL_SERVER_ERROR, "Job Pod 생성 대기 타임아웃"); // ✅ 수정
-    }
-
-    private String readFullPodLogs(CoreV1Api coreApi, String podName) throws ApiException {
-        return coreApi.readNamespacedPodLog(
-                podName, NAMESPACE,
-                null, null, null,
-                null, null, null,
-                null, null, null
+    /**
+     * 연도별 영화 조회 (최신순, 18개씩)
+     */
+    @Transactional("movieTransactionManager")
+    public MoviePageResponse getMoviesByYear(MovieByYearRequest request) {
+        Pageable pageable = PageRequest.of(
+                request.getPage(),
+                request.getSize() > 0 ? request.getSize() : 16  // 기본 18
         );
+
+        Page<Movie> pageResult = movieRepository.findByMovieYear(request.getYear(), pageable);
+
+        return MoviePageResponse.builder()
+                .content(pageResult.getContent().stream()
+                        .map(MovieListResponse::fromEntity)
+                        .toList())
+                .totalPages(pageResult.getTotalPages())
+                .totalElements(pageResult.getTotalElements())
+                .page(pageResult.getNumber())
+                .size(pageResult.getSize())
+                .build();
     }
 
-    private K6Parsed parseK6Logs(String logs) {
-        long checksSucceeded = 0;
-        double errorRate = 0.0;
-        double avgDurationSec = 0.0;
+    /**
+     * 영화 검색 (제목, 감독, 배우 LIKE) - 페이지 처리 (18개씩)
+     */
+    @Transactional("movieTransactionManager")
+    public MoviePageResponse searchMovies(MovieSearchRequest request) {
+        Pageable pageable = PageRequest.of(
+                request.getPage(),
+                request.getSize() > 0 ? request.getSize() : 16,  // 기본 16
+                Sort.by(Sort.Direction.DESC, "movieYear")        // ✅ 최신순
+        );
 
-        Matcher m1 = RX_CHECKS.matcher(logs);
-        if (m1.find()) {
-            try { checksSucceeded = Long.parseLong(m1.group(2)); } catch (Exception ignore) {}
-            log.info(" - 파싱: checks_succeeded = {}", checksSucceeded);
-        }
+        Page<Movie> pageResult = movieRepository.searchByKeyword(request.getKeyword(), pageable);
 
-        Matcher m2 = RX_HTTP_FAILED.matcher(logs);
-        if (m2.find()) {
-            try { errorRate = Double.parseDouble(m2.group(1)) / 100.0; } catch (Exception ignore) {}
-            log.info(" - 파싱: http_req_failed (errorRate) = {}", errorRate);
-        }
-
-        Matcher m3 = RX_HTTP_DURATION_AVG.matcher(logs);
-        if (m3.find()) {
-            try {
-                double val = Double.parseDouble(m3.group(1));
-                String unit = m3.group(2);
-                avgDurationSec = "ms".equalsIgnoreCase(unit) ? val / 1000.0 : val;
-            } catch (Exception ignore) {}
-            log.info(" - 파싱: http_req_duration avg(sec) = {}", avgDurationSec);
-        }
-
-        return new K6Parsed(checksSucceeded, errorRate, avgDurationSec);
+        return MoviePageResponse.builder()
+                .content(pageResult.getContent().stream()
+                        .map(MovieListResponse::fromEntity)
+                        .toList())
+                .totalPages(pageResult.getTotalPages())
+                .totalElements(pageResult.getTotalElements())
+                .page(pageResult.getNumber())
+                .size(pageResult.getSize())
+                .build();
     }
 
-    private void deleteJobAndPods(BatchV1Api batchApi, CoreV1Api coreApi, String jobName) throws Exception {
-        V1DeleteOptions opts = new V1DeleteOptions().propagationPolicy("Foreground");
-        try {
-            batchApi.deleteNamespacedJob(jobName, NAMESPACE, null, null, null, null, null, opts); // ✅ 최신 시그니처 반영
-        } catch (ApiException e) {
-            if (e.getCode() != 404) throw e;
+    /**
+     * 영화 상세 조회
+     */
+    @Transactional("movieTransactionManager")
+    public MovieDetailResponse getMovieDetail(Integer movieSeq) {
+        Movie movie = movieRepository.findByIdWithActors(movieSeq);
+        if (movie == null) {
+            throw new IllegalArgumentException("영화를 찾을 수 없습니다. seq=" + movieSeq);
         }
-
-        try {
-            V1PodList pods = coreApi.listNamespacedPod(
-                    NAMESPACE, null, null, null, null,
-                    "job-name=" + jobName, null, null, null, null, null
-            );
-            for (V1Pod p : pods.getItems()) {
-                String podName = p.getMetadata().getName();
-                try {
-                    coreApi.deleteNamespacedPod(podName, NAMESPACE, null, null, null, null, null, null); // ✅ 최신 시그니처 반영
-                } catch (ApiException e) {
-                    if (e.getCode() != 404) throw e;
-                }
-            }
-        } catch (ApiException e) {
-            if (e.getCode() != 404) throw e;
-        }
+        return MovieDetailResponse.fromEntity(movie);
     }
-
-    private static Integer n(Integer v) { return v == null ? 0 : v; }
-
-    private record K6Parsed(long checksSucceeded, double errorRate, double avgDurationSec) {}
 }
