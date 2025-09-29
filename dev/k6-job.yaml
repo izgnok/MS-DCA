@@ -6,14 +6,23 @@ metadata:
 spec:
   template:
     spec:
+      restartPolicy: Never
       containers:
         - name: k6
           image: grafana/k6:latest
-          command: ["k6", "run", "--out", "prometheus", "/scripts/script.js"]
+          command: ["k6","run","--out","experimental-prometheus-rw","/scripts/script.js"]
+          env:
+            - name: K6_PROMETHEUS_RW_SERVER_URL
+              value: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
+            # native histogram 끔 (기본 counter/gauge만 보냄)
+            - name: K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM
+              value: "true"
+            # 짧은 테스트에서도 바로 데이터가 찍히도록 푸시 간격 줄임
+            - name: K6_PROMETHEUS_RW_PUSH_INTERVAL
+              value: "1s"
           volumeMounts:
             - name: k6-scripts
               mountPath: /scripts
-      restartPolicy: Never
       volumes:
         - name: k6-scripts
           configMap:

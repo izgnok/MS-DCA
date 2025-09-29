@@ -18,6 +18,8 @@ spec:
       serviceAccountName: backend-sa
       imagePullSecrets:
         - name: dockerhub-secret
+      nodeSelector:
+        node-role: worker   # 워커 노드에만 올라가도록 설정
       containers:
         - name: dca-backend
           image: zlxldgus123/spring-app:latest

@@ -10,20 +10,19 @@ data:
 
     export const options = {
         scenarios: {
-            ramping_test: {
+            light_test: {
                 executor: 'ramping-vus',
                 startVUs: 0,
                 stages: [
-                    { duration: '30s', target: 1 },
-                    { duration: '1m', target: 5 },
-                    { duration: '30s', target: 0 },
+                    { duration: '10s', target: 1 },
                 ],
+                gracefulRampDown: '0s',
             },
         },
     };
 
     export default function () {
-        let res = http.post(
+        http.post(
             'http://dca-backend.default.svc.cluster.local:8080/backend/api/play',
             null,
             { headers: { 'Content-Type': 'application/json' } }
