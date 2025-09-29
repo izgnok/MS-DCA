@@ -7,6 +7,8 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      nodeSelector:               # 워커 노드로 고정
+        kubernetes.io/hostname: k3s-worker
       containers:
         - name: k6
           image: grafana/k6:latest
@@ -14,12 +16,15 @@ spec:
           env:
             - name: K6_PROMETHEUS_RW_SERVER_URL
               value: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
-            # native histogram 끔 (기본 counter/gauge만 보냄)
+            # Native histogram 끄고 Counter/Gauge만 보냄
             - name: K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM
-              value: "true"
-            # 짧은 테스트에서도 바로 데이터가 찍히도록 푸시 간격 줄임
+              value: "false"
+            # 다양한 통계치 export (Grafana 대시보드 호환용)
+            - name: K6_PROMETHEUS_RW_TREND_STATS
+              value: "avg,min,max,p(90),p(95),p(99)"
+            # 푸시 주기 (짧은 테스트도 반영되도록)
             - name: K6_PROMETHEUS_RW_PUSH_INTERVAL
-              value: "1s"
+              value: "2s"
           volumeMounts:
             - name: k6-scripts
               mountPath: /scripts

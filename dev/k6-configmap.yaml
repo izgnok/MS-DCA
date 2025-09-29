@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: k6-scripts
-  namespace: dev
+  namespace: default
 data:
   script.js: |
     import http from 'k6/http';
@@ -14,7 +14,7 @@ data:
                 executor: 'ramping-vus',
                 startVUs: 0,
                 stages: [
-                    { duration: '10s', target: 1 },
+                    { duration: '30s', target: 5 },
                 ],
                 gracefulRampDown: '0s',
             },
@@ -22,6 +22,7 @@ data:
     };
 
     export default function () {
+        // 실제 백엔드 API에 부하 전송
         http.post(
             'http://dca-backend.default.svc.cluster.local:8080/backend/api/play',
             null,

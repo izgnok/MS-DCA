@@ -6,7 +6,7 @@ metadata:
   labels:
     app: dca-backend
 spec:
-  replicas: 1
+  replicas: 4   # ✅ 기본 파드 수 4로 늘림
   selector:
     matchLabels:
       app: dca-backend
@@ -19,9 +19,16 @@ spec:
       imagePullSecrets:
         - name: dockerhub-secret
       nodeSelector:
-        node-role: worker   # 워커 노드에만 올라가도록 설정
+        kubernetes.io/hostname: k3s-worker   # 워커 노드에 배치
       containers:
         - name: dca-backend
           image: zlxldgus123/spring-app:latest
           ports:
             - containerPort: 8080
+          resources:                  # ✅ HPA가 동작하려면 리소스 요청/제한이 필요
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
