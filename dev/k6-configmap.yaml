@@ -10,19 +10,22 @@ data:
 
     export const options = {
         scenarios: {
-            light_test: {
+            heavy_test: {
                 executor: 'ramping-vus',
                 startVUs: 0,
                 stages: [
-                    { duration: '30s', target: 5 },
+                    { duration: '30s', target: 10 },   // 30초 동안 10 VU까지 ramp-up
+                    { duration: '1m', target: 10 },    // 1분 동안 10 VU 유지
+                    { duration: '30s', target: 20 },   // 30초 동안 20 VU까지 증가
+                    { duration: '1m', target: 20 },    // 1분 동안 20 VU 유지
+                    { duration: '30s', target: 0 },    // 부드럽게 내려옴
                 ],
-                gracefulRampDown: '0s',
+                gracefulRampDown: '10s',
             },
         },
     };
 
     export default function () {
-        // 실제 백엔드 API에 부하 전송
         http.post(
             'http://dca-backend.default.svc.cluster.local:8080/backend/api/play',
             null,
