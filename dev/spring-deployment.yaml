@@ -33,13 +33,19 @@ spec:
             limits:
               cpu: "800m"
               memory: "1Gi"
-          readinessProbe:             # ✅ Readiness Probe 추가
+          startupProbe:               # ✅ 초기화 완료 때까지 체크 (한 번만)
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 12      # 최대 60초까지 대기
+          readinessProbe:             # ✅ 엔드포인트 등록용 (가볍게 유지)
+            httpGet:
+              path: /actuator/health
+              port: 8080
             periodSeconds: 10
-          livenessProbe:              # ✅ Liveness Probe 추가
+          livenessProbe:              # ✅ 살아있는지 주기 체크
             httpGet:
               path: /actuator/health/liveness
               port: 8080

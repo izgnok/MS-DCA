@@ -8,31 +8,25 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: dca-backend
-  minReplicas: 1          # ✅ 최소 1개
-  maxReplicas: 4          # ✅ 최대 4개
+  minReplicas: 1          # 최소 1개
+  maxReplicas: 4          # 최대 4개
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50   # ✅ CPU 사용률 50% 이상이면 증설
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 50   # ✅ 메모리 사용률 50% 이상이면 증설
+          averageUtilization: 50   # CPU 사용률 50% 이상이면 증설
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 60   # 🚀 순간 spike 무시, 1분 평균 기준
+      stabilizationWindowSeconds: 60   # 순간 spike 무시, 1분 평균 기준
       policies:
         - type: Percent
           value: 100                   # 최대 100% 증가
           periodSeconds: 60
     scaleDown:
-      stabilizationWindowSeconds: 300  # ⏬ 줄일 때는 5분간 안정화
+      stabilizationWindowSeconds: 300  # 줄일 때는 5분간 안정화
       policies:
         - type: Percent
-          value: 100
+          value: 50                    # 한 번에 최대 50%만 축소
           periodSeconds: 60
