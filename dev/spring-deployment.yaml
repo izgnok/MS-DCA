@@ -28,33 +28,33 @@ spec:
             - containerPort: 8080
           env:
             - name: JAVA_OPTS
-              value: "-Xmx512m -Xms256m"
+              value: "-Xmx600m -Xms256m"   # ✅ Heap을 전체 limit의 ~60% 정도로 조정
           resources:
             requests:
-              cpu: "400m"
+              cpu: "300m"                 # ✅ 약간 낮춰서 스케줄링 여유
               memory: "512Mi"
             limits:
               cpu: "800m"
-              memory: "1Gi"      # ✅ 기존 1Gi → 2Gi
-          startupProbe:
+              memory: "1Gi"               # ✅ 그대로 두되, Heap < Limit 확보
+          startupProbe:                   # ✅ 더 여유롭게
             httpGet:
               path: /actuator/health
               port: 8080
-            failureThreshold: 30
+            failureThreshold: 60          # 최대 5분(60*5s)까지 대기
             periodSeconds: 5
-          readinessProbe:
+          readinessProbe:                 # ✅ 느슨하게 완화
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 10       # 시작 대기 늘림
+            periodSeconds: 15             # 체크 주기 완화
             timeoutSeconds: 5
-            failureThreshold: 6
-          livenessProbe:
+            failureThreshold: 10          # 10번 실패까지 허용
+          livenessProbe:                  # ✅ 너무 자주 죽이지 않게
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60       # 기동 안정화까지 기다림
             periodSeconds: 30
             timeoutSeconds: 5
-            failureThreshold: 3
+            failureThreshold: 5           # 5번 실패 후 kill

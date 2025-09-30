@@ -10,34 +10,35 @@ data:
 
     export const options = {
         scenarios: {
-            heavy_test: {
+            smoother_test: {
                 executor: 'ramping-vus',
                 startVUs: 0,
                 stages: [
-                    { duration: '15s', target: 5 },   // 30초 동안 10 VU까지 ramp-up
-                    { duration: '30s', target: 15 },    // 1분 동안 10 VU 유지
-                    { duration: '45s', target: 20 },   // 30초 동안 20 VU까지 증가
-                    { duration: '30s', target: 10 },    // 1분 동안 20 VU 유지
-                    { duration: '15s', target: 0 },    // 부드럽게 내려옴
+                    { duration: '30s', target: 5 },     // 천천히 5 VU
+                    { duration: '1m', target: 10 },     // 1분 동안 10 VU
+                    { duration: '1m30s', target: 15 },  // 1분 30초 동안 15 VU
+                    { duration: '2m', target: 20 },     // 2분 동안 20 VU 유지
+                    { duration: '1m', target: 15 },     // 점차 줄이기 시작
+                    { duration: '30s', target: 5 },     // 부드럽게 내려옴
+                    { duration: '15s', target: 0 },     // 마무리
                 ],
-                gracefulRampDown: '10s',
+                gracefulRampDown: '15s', // 종료도 조금 더 여유 있게
             },
         },
         tags: {
-            testid: __ENV.JOB_NAME || "manual-test"  // Job에서 전달된 이름으로 라벨링
+            testid: __ENV.JOB_NAME || "manual-test",
         },
     };
 
     export default function () {
         const url = 'http://dca-backend.default.svc.cluster.local:8080/backend/api/play';
         const headers = { 'Content-Type': 'application/json' };
-
-        const res = http.post(url, null, { headers });
         
-        // 응답 상태 코드 기록
+        const res = http.post(url, JSON.stringify({}), { headers });
+        
         if (res.status !== 200) {
-            console.error(`Request failed. Status: ${res.status}`);
+            console.warn(`Request failed. Status: ${res.status}`);
         }
-
+        
         sleep(1);
     }
