@@ -6,7 +6,7 @@ metadata:
   labels:
     app: dca-backend
 spec:
-  replicas: 1   # ✅ 기본 파드 수
+  replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -20,34 +20,37 @@ spec:
       imagePullSecrets:
         - name: dockerhub-secret
       nodeSelector:
-        kubernetes.io/hostname: k3s-worker   # 워커 노드에 배치
+        kubernetes.io/hostname: k3s-worker
       containers:
         - name: dca-backend
           image: zlxldgus123/spring-app:latest
           ports:
             - containerPort: 8080
-          resources:                  # ✅ HPA 동작을 위한 리소스 설정
+          env:
+            - name: JAVA_OPTS
+              value: "-Xmx512m -Xms256m"
+          resources:
             requests:
               cpu: "400m"
               memory: "512Mi"
             limits:
               cpu: "800m"
-              memory: "1Gi"
-          startupProbe:               # ✅ 초기화 완료 때까지 체크
+              memory: "1Gi"      # ✅ 기존 1Gi → 2Gi
+          startupProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            failureThreshold: 30      # 30 * 5s = 최대 150초 대기
+            failureThreshold: 30
             periodSeconds: 5
-          readinessProbe:             # ✅ 엔드포인트 등록은 느슨하게
+          readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 5    # 빠르게 체크 시작
-            periodSeconds: 10         # 10초마다 체크
-            timeoutSeconds: 5         # 응답 5초까지 기다림
-            failureThreshold: 6       # 6번(=60초) 실패해야 NotReady 판정
-          livenessProbe:              # ✅ 살아있는지 주기 체크
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8080

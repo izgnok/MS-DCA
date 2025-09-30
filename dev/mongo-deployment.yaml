@@ -1,60 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dca-backend
+  name: mongo
   namespace: default
-  labels:
-    app: dca-backend
 spec:
   replicas: 1
-  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: dca-backend
+      app: mongo
   template:
     metadata:
       labels:
-        app: dca-backend
+        app: mongo
     spec:
-      serviceAccountName: backend-sa
-      imagePullSecrets:
-        - name: dockerhub-secret
-      nodeSelector:
-        kubernetes.io/hostname: k3s-worker
+      imagePullSecrets: # 🔹 여기서 regcred로 수정
+        - name: regcred
       containers:
-        - name: dca-backend
-          image: zlxldgus123/spring-app:latest
+        - name: mongo
+          image: mongo:6.0
           ports:
-            - containerPort: 8080
-          env:
-            - name: JAVA_OPTS
-              value: "-Xmx512m -Xms256m"
-          resources:
-            requests:
-              cpu: "400m"
-              memory: "512Mi"
-            limits:
-              cpu: "800m"
-              memory: "1Gi"      # ✅ 기존 1Gi → 2Gi
-          startupProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            failureThreshold: 30
-            periodSeconds: 5
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 6
-          livenessProbe:
-            httpGet:
-              path: /actuator/health/liveness
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            timeoutSeconds: 5
-            failureThreshold: 3
+            - containerPort: 27017
