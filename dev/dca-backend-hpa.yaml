@@ -16,22 +16,21 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50    # ✅ CPU 50% 이상
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: 50    # ✅ 메모리 70% 이상
+          averageUtilization: 50    # ✅ CPU 50% 이상이면 스케일 아웃
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 60
+      stabilizationWindowSeconds: 0   # 🚀 즉시 반응
+      selectPolicy: Max
       policies:
+        - type: Pods
+          value: 3                     # 한 번에 최대 +3개 허용 (1→4 점프 가능)
+          periodSeconds: 15
         - type: Percent
-          value: 100
-          periodSeconds: 60
+          value: 200                   # 200% 증가까지 허용
+          periodSeconds: 15
     scaleDown:
-      stabilizationWindowSeconds: 300
+      stabilizationWindowSeconds: 300  # ⏬ 줄일 때는 5분 관찰 후
+      selectPolicy: Min
       policies:
         - type: Percent
           value: 50
