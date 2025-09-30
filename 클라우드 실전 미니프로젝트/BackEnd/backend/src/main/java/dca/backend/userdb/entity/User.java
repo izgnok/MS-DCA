@@ -1,4 +1,4 @@
-package dca.backend.entity;
+package dca.backend.userdb.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

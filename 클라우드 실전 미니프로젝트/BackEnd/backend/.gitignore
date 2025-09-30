@@ -1,21 +1,47 @@
+# ------------------------------
 # Build 결과물
+# ------------------------------
 /build/
 /out/
 /target/
 
+# ------------------------------
 # IDE 설정파일
+# ------------------------------
 .idea/
 *.iml
 .vscode/
 *.class
 
+# ------------------------------
 # 로그 파일
+# ------------------------------
 *.log
 
+# ------------------------------
 # 시스템 파일
+# ------------------------------
 .DS_Store
 Thumbs.db
 
-# 환경설정
+# ------------------------------
+# 환경설정 (민감정보)
+# ------------------------------
 src/main/resources/application.properties
 src/main/resources/application.yml
+
+# ------------------------------
+# Gradle 관련
+# ------------------------------
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-app.setting
+
+# Gradle Wrapper 실행파일 (OS별)
+gradlew
+gradlew.bat
+
+# 캐시
+.gradle/
+build/

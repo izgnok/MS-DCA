@@ -1,8 +1,7 @@
-package dca.backend.infrastructure;
+package dca.backend.userdb.repository;
 
 
-import dca.backend.entity.Review;
-import dca.backend.entity.User;
+import dca.backend.userdb.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
