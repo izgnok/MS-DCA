@@ -6,7 +6,7 @@ metadata:
   labels:
     app: dca-backend
 spec:
-  replicas: 1   # ✅ 기본 파드 수 4
+  replicas: 1   # ✅ 기본 파드 수
   revisionHistoryLimit: 2
   selector:
     matchLabels:
@@ -33,21 +33,25 @@ spec:
             limits:
               cpu: "800m"
               memory: "1Gi"
-          startupProbe:               # ✅ 초기화 완료 때까지 체크 (한 번만)
-            httpGet:
-              path: /actuator/health/readiness
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 12      # 최대 60초까지 대기
-          readinessProbe:             # ✅ 엔드포인트 등록용 (가볍게 유지)
+          startupProbe:               # ✅ 초기화 완료 때까지 체크
             httpGet:
               path: /actuator/health
               port: 8080
-            periodSeconds: 10
+            failureThreshold: 30      # 30 * 5s = 최대 150초 대기
+            periodSeconds: 5
+          readinessProbe:             # ✅ 엔드포인트 등록은 느슨하게
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 5    # 빠르게 체크 시작
+            periodSeconds: 10         # 10초마다 체크
+            timeoutSeconds: 5         # 응답 5초까지 기다림
+            failureThreshold: 6       # 6번(=60초) 실패해야 NotReady 판정
           livenessProbe:              # ✅ 살아있는지 주기 체크
             httpGet:
               path: /actuator/health/liveness
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
