@@ -1,0 +1,200 @@
+2025-10-04T04:20:25Z web01 audit[3878]: kernel: CPU0: Core temperature above threshold
+2025-10-04T04:15:25Z web01 systemd[6549]: sudo: pam_unix(sudo:auth): authentication failure; logname=deploy uid=1001
+2025-10-04T04:10:25Z alpha-mac sshd[2512]: Stopping User Manager for UID 1000
+Oct 04 04:05:25 db01 sudo[820]: Connection closed by remote host
+Oct 04 04:00:25 backup systemd[6727]: disk0s2: I/O error detected
+2025-10-04T03:55:25Z backup sudo[5667]: NetworkManager: <info>  [config]  devices configured
+Oct 04 03:50:25 web01 com.apple.securityd[4098]: Session opened for user root by loginuid=0
+Oct 04 03:45:25 web01 kernel[7195]: Backup completed successfully
+Oct 04 03:40:25 web01 sudo[7459]: sudo:  deploy : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/bob ; USER=root ; COMMAND=/bin/ls
+2025-10-04T03:35:25Z db01 kernel[6775]: Failed password for invalid user service from 172.16.0.8 port 18169 ssh2
+Oct 04 03:30:25 db01 kernel[5633]: disk0s2: I/O error detected
+2025-10-04T03:25:25Z db01 systemd[8833]: sudo: pam_unix(sudo:auth): authentication failure; logname=root uid=1001
+2025-10-04T03:20:25Z proxy1 kernel[8070]: Accepted password for alice from 192.0.2.45 port 49488 ssh2
+2025-10-04T03:15:25Z web01 systemd[4475]: Stopping User Manager for UID 1000
+2025-10-04T03:10:25Z alpha-mac sshd[3373]: sudo: pam_unix(sudo:auth): authentication failure; logname=deploy uid=1001
+Oct 04 03:05:25 proxy1 com.apple.securityd[2293]: sudo:  deploy : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/bin/ls
+Oct 04 03:00:25 backup sshd[3604]: Backup completed successfully
+2025-10-04T02:55:25Z backup systemd[3369]: kernel: CPU0: Core temperature above threshold
+Oct 04 02:50:25 web01 com.apple.securityd[3928]: sudo:  alice : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/root ; USER=root ; COMMAND=/bin/ls
+2025-10-04T02:45:25Z db01 audit[5076]: kernel: CPU0: Core temperature above threshold
+2025-10-04T02:40:25Z web01 kernel[1637]: Started Session c1 of user root.
+2025-10-04T02:35:25Z alpha-mac sudo[5342]: Started Session c1 of user root.
+Oct 04 02:30:25 backup com.apple.securityd[9607]: Failed password for bob from 203.0.113.10 port 36405 ssh2
+2025-10-04T02:25:25Z db01 audit[5514]: NetworkManager: <info>  [config]  devices configured
+2025-10-04T02:20:25Z backup kernel[8137]: NetworkManager: <info>  [config]  devices configured
+Oct 04 02:15:25 alpha-mac sshd[7333]: Backup completed successfully
+Oct 04 02:10:25 db01 systemd[7423]: Session opened for user root by loginuid=0
+2025-10-04T02:05:25Z proxy1 sudo[1708]: Started Session c1 of user root.
+Oct 04 02:00:25 proxy1 sudo[5622]: disk0s2: I/O error detected
+Oct 04 01:55:25 backup systemd[2738]: authentication failure; logname= uid=0 euid=0 tty= ruser= rhost=10.0.0.5 user=alice
+Oct 04 01:50:25 web01 com.apple.securityd[1090]: authentication failure; logname= uid=0 euid=0 tty= ruser= rhost=198.51.100.23 user=service
+Oct 04 01:45:25 backup kernel[8028]: Service started successfully
+Oct 04 01:40:25 backup sshd[9020]: sudo:  service : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/bob ; USER=root ; COMMAND=/bin/ls
+Oct 04 01:35:25 proxy1 systemd[5844]: Accepted password for bob from 192.0.2.45 port 36322 ssh2
+2025-10-04T01:30:25Z backup kernel[8664]: NetworkManager: <info>  [config]  devices configured
+2025-10-04T01:25:25Z backup systemd[7475]: Failed password for invalid user root from 10.0.0.5 port 51047 ssh2
+2025-10-04T01:20:25Z alpha-mac sudo[5656]: Started Session c1 of user root.
+2025-10-04T01:15:25Z db01 audit[5807]: kernel: CPU0: Core temperature above threshold
+Oct 04 01:10:25 web01 systemd[854]: Session opened for user root by loginuid=0
+2025-10-04T01:05:25Z proxy1 kernel[4858]: Filesystem check completed
+Oct 04 01:00:25 db01 com.apple.securityd[1268]: Connection closed by remote host
+2025-10-04T00:55:25Z backup audit[8888]: kernel: CPU0: Core temperature above threshold
+2025-10-04T00:50:25Z web01 sshd[4128]: Started Session c1 of user root.
+2025-10-04T00:45:25Z backup kernel[3818]: Failed password for invalid user root from 203.0.113.10 port 53242 ssh2
+Oct 04 00:40:25 alpha-mac sudo[4319]: Backup completed successfully
+Oct 04 00:35:25 web01 sshd[3761]: Connection closed by remote host
+Oct 04 00:30:25 backup sudo[3918]: Backup completed successfully
+Oct 04 00:25:25 db01 sudo[2081]: Service started successfully
+Oct 04 00:20:25 alpha-mac kernel[5519]: Connection closed by remote host
+2025-10-04T00:15:25Z web01 kernel[9502]: sudo: pam_unix(sudo:auth): authentication failure; logname=deploy uid=1001
+Oct 04 00:10:25 proxy1 sshd[9520]: disk0s2: I/O error detected
+Oct 04 00:05:25 alpha-mac kernel[9041]: Service started successfully
+Oct 04 00:00:25 web01 sudo[4263]: Accepted password for deploy from 198.51.100.23 port 51622 ssh2
+2025-10-03T23:55:25Z backup sshd[2420]: kernel: CPU0: Core temperature above threshold
+Oct 03 23:50:25 backup sudo[6564]: Session opened for user root by loginuid=0
+Oct 03 23:45:25 alpha-mac systemd[6413]: Session opened for user root by loginuid=0
+Oct 03 23:40:25 web01 sshd[4883]: disk0s2: I/O error detected
+Oct 03 23:35:25 backup com.apple.securityd[6161]: Backup completed successfully
+2025-10-03T23:30:25Z alpha-mac sudo[8280]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T23:25:25Z proxy1 sudo[7916]: kernel: CPU0: Core temperature above threshold
+Oct 03 23:20:25 alpha-mac sudo[3690]: Backup completed successfully
+2025-10-03T23:15:25Z db01 audit[6770]: Stopping User Manager for UID 1000
+2025-10-03T23:10:25Z web01 systemd[1537]: Stopping User Manager for UID 1000
+Oct 03 23:05:25 db01 sshd[7195]: Service started successfully
+2025-10-03T23:00:25Z alpha-mac kernel[5510]: kernel: CPU0: Core temperature above threshold
+Oct 03 22:55:25 db01 sudo[9276]: Connection closed by remote host
+2025-10-03T22:50:25Z web01 systemd[4989]: Stopping User Manager for UID 1000
+2025-10-03T22:45:25Z proxy1 audit[4080]: kernel: CPU0: Core temperature above threshold
+2025-10-03T22:40:25Z db01 audit[4433]: kernel: CPU0: Core temperature above threshold
+Oct 03 22:35:25 web01 kernel[3484]: Connection closed by remote host
+Oct 03 22:30:25 web01 com.apple.securityd[5200]: sudo:  bob : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/deploy ; USER=root ; COMMAND=/bin/ls
+Oct 03 22:25:25 backup com.apple.securityd[397]: Session opened for user root by loginuid=0
+2025-10-03T22:20:25Z db01 sshd[3676]: Filesystem check completed
+2025-10-03T22:15:25Z web01 sshd[7563]: Started Session c1 of user root.
+Oct 03 22:10:25 backup sshd[9308]: Connection closed by remote host
+Oct 03 22:05:25 alpha-mac systemd[7470]: disk0s2: I/O error detected
+2025-10-03T22:00:25Z web01 kernel[618]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T21:55:25Z proxy1 sshd[6370]: Started Session c1 of user root.
+2025-10-03T21:50:25Z backup systemd[5260]: Started Session c1 of user root.
+Oct 03 21:45:25 backup systemd[8117]: Session opened for user root by loginuid=0
+Oct 03 21:40:25 web01 com.apple.securityd[5277]: disk0s2: I/O error detected
+Oct 03 21:35:25 backup kernel[7259]: Accepted password for root from 192.0.2.45 port 41381 ssh2
+2025-10-03T21:30:25Z proxy1 sshd[4726]: Accepted password for deploy from 198.51.100.23 port 6281 ssh2
+Oct 03 21:25:25 backup kernel[2239]: Session opened for user root by loginuid=0
+2025-10-03T21:20:25Z alpha-mac systemd[1094]: Started Session c1 of user root.
+Oct 03 21:15:25 backup com.apple.securityd[9720]: Backup completed successfully
+2025-10-03T21:10:25Z proxy1 sudo[6514]: Stopping User Manager for UID 1000
+Oct 03 21:05:25 proxy1 kernel[8191]: Connection closed by remote host
+2025-10-03T21:00:25Z web01 audit[7084]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T20:55:25Z db01 sudo[9574]: kernel: CPU0: Core temperature above threshold
+2025-10-03T20:50:25Z alpha-mac audit[6098]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T20:45:25Z proxy1 sudo[7170]: kernel: CPU0: Core temperature above threshold
+2025-10-03T20:40:25Z proxy1 sudo[4148]: kernel: CPU0: Core temperature above threshold
+2025-10-03T20:35:25Z alpha-mac sudo[1667]: NetworkManager: <info>  [config]  devices configured
+Oct 03 20:30:25 db01 systemd[2158]: disk0s2: I/O error detected
+Oct 03 20:25:25 proxy1 sudo[1580]: Session opened for user root by loginuid=0
+2025-10-03T20:20:25Z alpha-mac sshd[9870]: Started Session c1 of user root.
+Oct 03 20:15:25 db01 com.apple.securityd[9579]: Backup completed successfully
+2025-10-03T20:10:25Z db01 kernel[334]: Filesystem check completed
+2025-10-03T20:05:25Z backup sudo[7636]: Stopping User Manager for UID 1000
+Oct 03 20:00:25 db01 sudo[2360]: Session opened for user root by loginuid=0
+2025-10-03T19:55:25Z proxy1 audit[2566]: Accepted password for service from 10.0.0.5 port 35682 ssh2
+2025-10-03T19:50:25Z web01 kernel[2069]: Filesystem check completed
+2025-10-03T19:45:25Z proxy1 systemd[2319]: sudo: pam_unix(sudo:auth): authentication failure; logname=bob uid=1001
+2025-10-03T19:40:25Z proxy1 kernel[1844]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T19:35:25Z db01 kernel[5564]: NetworkManager: <info>  [config]  devices configured
+Oct 03 19:30:25 db01 com.apple.securityd[5518]: Backup completed successfully
+2025-10-03T19:25:25Z db01 audit[5708]: Failed password for invalid user service from 10.0.0.5 port 32300 ssh2
+2025-10-03T19:20:25Z backup kernel[3447]: Started Session c1 of user root.
+2025-10-03T19:15:25Z alpha-mac systemd[826]: Failed password for invalid user root from 10.0.0.5 port 32732 ssh2
+2025-10-03T19:10:25Z db01 kernel[3661]: NetworkManager: <info>  [config]  devices configured
+Oct 03 19:05:25 backup sudo[7902]: Session opened for user root by loginuid=0
+2025-10-03T19:00:25Z web01 kernel[296]: Filesystem check completed
+Oct 03 18:55:25 proxy1 kernel[3606]: disk0s2: I/O error detected
+2025-10-03T18:50:25Z proxy1 sshd[3538]: Started Session c1 of user root.
+Oct 03 18:45:25 db01 systemd[8576]: authentication failure; logname= uid=0 euid=0 tty= ruser= rhost=198.51.100.23 user=bob
+2025-10-03T18:40:25Z backup systemd[6420]: Accepted password for alice from 198.51.100.23 port 43912 ssh2
+2025-10-03T18:35:25Z web01 sudo[4259]: sudo: pam_unix(sudo:auth): authentication failure; logname=deploy uid=1001
+Oct 03 18:30:25 web01 sudo[2097]: Backup completed successfully
+2025-10-03T18:25:25Z alpha-mac sshd[9395]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=10.0.0.5 user=root
+2025-10-03T18:20:25Z proxy1 systemd[290]: Stopping User Manager for UID 1000
+2025-10-03T18:15:25Z db01 sshd[7168]: Failed password for invalid user service from 172.16.0.8 port 40689 ssh2
+2025-10-03T18:10:25Z db01 sshd[9488]: kernel: CPU0: Core temperature above threshold
+Oct 03 18:05:25 db01 systemd[3837]: Session opened for user root by loginuid=0
+Oct 03 18:00:25 alpha-mac sshd[1861]: Backup completed successfully
+Oct 03 17:55:25 alpha-mac sudo[4574]: Service started successfully
+2025-10-03T17:50:25Z backup sudo[4228]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T17:45:25Z alpha-mac sshd[370]: Stopping User Manager for UID 1000
+Oct 03 17:40:25 db01 sshd[8783]: sudo:  root : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/bin/ls
+Oct 03 17:35:25 backup sshd[2462]: Accepted password for root from 172.16.0.8 port 45177 ssh2
+Oct 03 17:30:25 web01 systemd[5605]: Failed password for bob from 198.51.100.23 port 30227 ssh2
+2025-10-03T17:25:25Z db01 audit[6580]: Started Session c1 of user root.
+Oct 03 17:20:25 web01 systemd[296]: Accepted password for bob from 192.0.2.45 port 24414 ssh2
+Oct 03 17:15:25 db01 systemd[4915]: authentication failure; logname= uid=0 euid=0 tty= ruser= rhost=172.16.0.8 user=bob
+Oct 03 17:10:25 db01 kernel[6813]: Service started successfully
+2025-10-03T17:05:25Z proxy1 kernel[8161]: Started Session c1 of user root.
+2025-10-03T17:00:25Z proxy1 sudo[2272]: kernel: CPU0: Core temperature above threshold
+2025-10-03T16:55:25Z proxy1 systemd[8310]: Stopping User Manager for UID 1000
+Oct 03 16:50:25 proxy1 systemd[9452]: Session opened for user root by loginuid=0
+Oct 03 16:45:25 proxy1 kernel[9800]: Failed password for alice from 198.51.100.23 port 42382 ssh2
+Oct 03 16:40:25 db01 systemd[7950]: Backup completed successfully
+2025-10-03T16:35:25Z backup audit[6336]: Stopping User Manager for UID 1000
+Oct 03 16:30:25 backup systemd[276]: Connection closed by remote host
+2025-10-03T16:25:25Z backup systemd[3715]: Accepted password for deploy from 198.51.100.23 port 7153 ssh2
+2025-10-03T16:20:25Z web01 kernel[3086]: kernel: CPU0: Core temperature above threshold
+2025-10-03T16:15:25Z db01 sudo[9737]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T16:10:25Z alpha-mac sshd[3075]: kernel: CPU0: Core temperature above threshold
+2025-10-03T16:05:25Z proxy1 sshd[2287]: Filesystem check completed
+2025-10-03T16:00:25Z alpha-mac sudo[6114]: Started Session c1 of user root.
+2025-10-03T15:55:25Z alpha-mac sudo[5785]: kernel: CPU0: Core temperature above threshold
+2025-10-03T15:50:25Z backup sshd[2412]: Filesystem check completed
+2025-10-03T15:45:25Z db01 sudo[3000]: Stopping User Manager for UID 1000
+Oct 03 15:40:25 proxy1 com.apple.securityd[1893]: Connection closed by remote host
+2025-10-03T15:35:25Z db01 kernel[9336]: sudo: pam_unix(sudo:auth): authentication failure; logname=service uid=1001
+Oct 03 15:30:25 alpha-mac kernel[4246]: Connection closed by remote host
+2025-10-03T15:25:25Z alpha-mac audit[3501]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T15:20:25Z backup sshd[5188]: Stopping User Manager for UID 1000
+2025-10-03T15:15:25Z backup sudo[2934]: Stopping User Manager for UID 1000
+Oct 03 15:10:25 proxy1 systemd[1086]: Session opened for user root by loginuid=0
+Oct 03 15:05:25 alpha-mac systemd[5709]: Backup completed successfully
+Oct 03 15:00:25 db01 kernel[6792]: Backup completed successfully
+2025-10-03T14:55:25Z web01 kernel[5150]: Started Session c1 of user root.
+Oct 03 14:50:25 backup com.apple.securityd[5611]: Session opened for user root by loginuid=0
+Oct 03 14:45:25 web01 sshd[969]: Service started successfully
+2025-10-03T14:40:25Z web01 sudo[4796]: Filesystem check completed
+Oct 03 14:35:25 web01 systemd[8295]: Backup completed successfully
+2025-10-03T14:30:25Z alpha-mac systemd[7776]: Filesystem check completed
+Oct 03 14:25:25 web01 systemd[7649]: Failed password for deploy from 172.16.0.8 port 17530 ssh2
+Oct 03 14:20:25 web01 sshd[1911]: sudo:  root : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/root ; USER=root ; COMMAND=/bin/ls
+2025-10-03T14:15:25Z db01 kernel[3971]: Filesystem check completed
+Oct 03 14:10:25 web01 com.apple.securityd[3096]: Backup completed successfully
+Oct 03 14:05:25 db01 sudo[9600]: Backup completed successfully
+2025-10-03T14:00:25Z backup audit[8050]: Filesystem check completed
+Oct 03 13:55:25 backup kernel[4819]: Accepted password for alice from 198.51.100.23 port 20364 ssh2
+2025-10-03T13:50:25Z backup sudo[3855]: Filesystem check completed
+Oct 03 13:45:25 proxy1 kernel[3579]: Connection closed by remote host
+2025-10-03T13:40:25Z backup sudo[2990]: Filesystem check completed
+Oct 03 13:35:25 web01 com.apple.securityd[9196]: Backup completed successfully
+2025-10-03T13:30:25Z db01 sudo[6021]: kernel: CPU0: Core temperature above threshold
+2025-10-03T13:25:25Z alpha-mac audit[9924]: Stopping User Manager for UID 1000
+2025-10-03T13:20:25Z web01 sshd[9428]: Started Session c1 of user root.
+2025-10-03T13:15:25Z backup audit[7381]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.0.2.45 user=bob
+Oct 03 13:10:25 web01 sshd[551]: Service started successfully
+2025-10-03T13:05:25Z proxy1 sudo[9392]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=203.0.113.10 user=deploy
+2025-10-03T13:00:25Z backup kernel[3764]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T12:55:25Z web01 systemd[7793]: Failed password for invalid user deploy from 192.0.2.45 port 40988 ssh2
+2025-10-03T12:50:25Z alpha-mac sudo[5343]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T12:45:25Z backup audit[8132]: sudo: pam_unix(sudo:auth): authentication failure; logname=alice uid=1001
+2025-10-03T12:40:25Z alpha-mac sshd[2522]: kernel: CPU0: Core temperature above threshold
+2025-10-03T12:35:25Z backup kernel[4509]: sudo: pam_unix(sudo:auth): authentication failure; logname=bob uid=1001
+2025-10-03T12:30:25Z proxy1 audit[9446]: Stopping User Manager for UID 1000
+2025-10-03T12:25:25Z backup sshd[8162]: Stopping User Manager for UID 1000
+2025-10-03T12:20:25Z alpha-mac sshd[3291]: NetworkManager: <info>  [config]  devices configured
+2025-10-03T12:15:25Z db01 audit[7481]: sudo: pam_unix(sudo:auth): authentication failure; logname=service uid=1001
+Oct 03 12:10:25 db01 kernel[9426]: Failed password for bob from 10.0.0.5 port 25301 ssh2
+Oct 03 12:05:25 proxy1 sudo[9350]: Failed password for bob from 172.16.0.8 port 55958 ssh2
+Oct 03 12:00:25 web01 sudo[6257]: sudo:  root : 3 incorrect password attempts ; TTY=pts/0 ; PWD=/home/bob ; USER=root ; COMMAND=/bin/ls
+Oct 03 11:55:25 db01 sshd[1071]: Session opened for user root by loginuid=0
+2025-10-03T11:50:25Z backup kernel[8561]: Started Session c1 of user root.
+Oct 03 11:45:25 proxy1 kernel[8555]: Service started successfully

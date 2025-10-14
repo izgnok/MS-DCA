@@ -1,0 +1,6 @@
+#오후 - google.com 평균 응답 시간: 35.073ms
+#오후 - ggoreb.com 응답 없음
+#오후 - zdnet.co.kr 평균 응답 시간: 10.273ms
+#오후 - google.com 평균 응답 시간: 34.665ms
+#오후 - bloter.net 응답 없음
+#오후 - zdnet.co.kr 평균 응답 시간: 12.626ms
